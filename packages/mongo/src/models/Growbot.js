@@ -6,12 +6,16 @@ const GrowbotSchema = new Schema(
     name: {
       type: String,
     },
-    user: {
+    username: {
       type: String,
     },
     experience: {
       type: Number,
       default: 0,
+    },
+    type: {
+      type: String,
+      enum: ['earth', 'wind', 'water', 'fire'],
     },
   },
   {timestamps: true},

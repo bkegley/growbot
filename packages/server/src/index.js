@@ -64,7 +64,7 @@ const typeDefs = `
 
     input CreateGrowbotInput {
       name: String
-      user: String
+      username: String
     }
 
     type Query {
@@ -126,7 +126,7 @@ const resolvers = {
   },
   User: {
     growbot: async (parent, args, {models}, info) => {
-      const growbot = await models.Growbot.findOne({user: parent._id})
+      const growbot = await models.Growbot.findOne({username: parent.username})
       return growbot
     },
   },

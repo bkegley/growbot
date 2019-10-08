@@ -1,6 +1,7 @@
 require('dotenv').config()
 import tmi from 'tmi.js'
 import fetch from 'cross-fetch'
+import fetchGraphql from './fetchGraphql'
 
 const options = {
   identity: {
@@ -103,15 +104,12 @@ async function onCommandHandler(target, context, message, self) {
     }
 
     case '!growbot': {
-      const {username} = context
+      const [command, ...stringArray] = args
 
-      const {data} = await fetch('http://localhost:4000', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          query: `
+      // get growbot if exists
+      const {username} = context
+      const {data} = await fetchGraphql('http://localhost:4000/graphql', {
+        query: `
             query getUser($username: String) {
               getUser(username: $username) {
                 growbot {
@@ -120,20 +118,56 @@ async function onCommandHandler(target, context, message, self) {
               }
             }
           `,
-          variables: {
-            username: username,
-          },
-        }),
-      })
-        .then(res => res.json())
-        .catch(err => console.log(err))
-
-      const {
-        getUser: {
-          growbot: {name},
+        variables: {
+          username: username,
         },
-      } = data
-      client.say(target, `Your growbot is ${name} :)`)
+      })
+
+      // provide error handling if user doesn't exist
+      const {getUser: user} = data
+      const {growbot} = user
+
+      if (!command) {
+        if (growbot) {
+          client.say(target, `Your growbot is ${growbot.name} :)`)
+        } else {
+          client.say(target, `You don't have a growbot yet! Create one with '!growbot create Bitty the Botty'`)
+        }
+        return
+      }
+
+      switch (command) {
+        case 'create': {
+          const name = stringArray.join(' ')
+          const {data} = await fetchGraphql('http://localhost:4000/graphql', {
+            query: `
+            mutation createGrowbot($input: CreateGrowbotInput) {
+              createGrowbot(input: $input) {
+                id
+                name
+                user {
+                  id
+                }
+              }
+            }
+            `,
+            variables: {
+              input: {
+                name,
+                username,
+              },
+            },
+          })
+
+          const {createGrowbot: growbot} = data
+          client.say(target, `Say hello to your new Growbot! Hello, ${growbot.name}`)
+          break
+        }
+        case 'grease': {
+        }
+        default: {
+        }
+      }
     }
 
     // handle errors probs
