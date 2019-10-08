@@ -1,0 +1,20 @@
+{
+  "name": "@growbot/growbot",
+  "version": "0.0.1",
+  "description": "Just a friendly Twitch chatbot named Growbot",
+  "main": "dist/index.js",
+  "author": "Bryan Kegley <hi@bryankegley.me>",
+  "license": "MIT",
+  "scripts": {
+    "develop": "babel-node src/index.js",
+    "build": "babel src --out-dir dist"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.6.2",
+    "@babel/core": "^7.6.2",
+    "@babel/preset-env": "^7.6.2"
+  },
+  "dependencies": {
+    "tmi.js": "^1.5.0"
+  }
+}
