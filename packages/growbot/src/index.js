@@ -102,6 +102,40 @@ async function onCommandHandler(target, context, message, self) {
       break
     }
 
+    case '!growbot': {
+      const {username} = context
+
+      const {data} = await fetch('http://localhost:4000', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          query: `
+            query getUser($username: String) {
+              getUser(username: $username) {
+                growbot {
+                  name
+                }
+              }
+            }
+          `,
+          variables: {
+            username: username,
+          },
+        }),
+      })
+        .then(res => res.json())
+        .catch(err => console.log(err))
+
+      const {
+        getUser: {
+          growbot: {name},
+        },
+      } = data
+      client.say(target, `Your growbot is ${name} :)`)
+    }
+
     // handle errors probs
     default: {
       const {data} = await fetch('http://localhost:4000/graphql', {

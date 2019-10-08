@@ -1,6 +1,20 @@
 import mongoose from 'mongoose'
 const Schema = mongoose.Schema
 
+const TransactionSchema = new Schema(
+  {
+    command: {
+      type: mongoose.Types.ObjectId,
+      required: true,
+    },
+    amount: {
+      type: Number,
+      required: true,
+    },
+  },
+  {timestamps: true},
+)
+
 const UserSchema = new Schema(
   {
     twitchId: {
@@ -30,20 +44,6 @@ const UserSchema = new Schema(
   {
     timestamps: true,
   },
-)
-
-const TransactionSchema = new Schema(
-  {
-    command: {
-      type: mongoose.Types.ObjectId,
-      required: true,
-    },
-    amount: {
-      type: Number,
-      required: true,
-    },
-  },
-  {timestamps: true},
 )
 
 export default mongoose.model('user', UserSchema)

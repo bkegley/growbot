@@ -27,11 +27,19 @@ const typeDefs = `
       transactions: [Transaction]
       lastSeen: String
       totalViewTime: Int
+      growbot: Growbot
     }
 
     type Transaction {
       command: Command
       amount: Int
+    }
+
+    type Growbot {
+      id: ID
+      name: String
+      experience: Int
+      user: User
     }
 
     input CreateCommandInput {
@@ -54,16 +62,24 @@ const typeDefs = `
       username: String
     }
 
+    input CreateGrowbotInput {
+      name: String
+      user: String
+    }
+
     type Query {
         listCommands: [Command]
         listVariables: [Variable]
         listUsers: [User]
+        getUser(id: ID username: String): User
+        listGrowbots: [Growbot]
     }
 
     type Mutation {
         createCommand(input: CreateCommandInput): Command
         createVariable(input: CreateVariableInput): Variable
         createUser(input: CreateUserInput): User
+        createGrowbot(input: CreateGrowbotInput): Growbot
     }
 `
 
@@ -77,6 +93,18 @@ const resolvers = {
       const variables = await models.Variable.find()
       return variables
     },
+    listUsers: async (parent, args, {models}, info) => {
+      const users = await models.User.find()
+      return users
+    },
+    getUser: async (parent, args, {models}, info) => {
+      const user = await models.User.findOne(args)
+      return user
+    },
+    listGrowbots: async (parent, args, {models}, info) => {
+      const growbots = await models.Growbot.find()
+      return growbots
+    },
   },
   Mutation: {
     createCommand: async (parent, {input}, {models}, info) => {
@@ -86,6 +114,20 @@ const resolvers = {
     createVariable: async (parent, {input}, {models}, info) => {
       const variable = await new models.Variable(input).save()
       return variable
+    },
+    createUser: async (parent, {input}, {models}, info) => {
+      const user = await new models.User(input).save()
+      return user
+    },
+    createGrowbot: async (parent, {input}, {models}, info) => {
+      const growbot = await new models.Growbot(input).save()
+      return growbot
+    },
+  },
+  User: {
+    growbot: async (parent, args, {models}, info) => {
+      const growbot = await models.Growbot.findOne({user: parent._id})
+      return growbot
     },
   },
 }
