@@ -1,0 +1,13 @@
+{
+  "name": "@growbot/mongo",
+  "version": "0.0.1",
+  "description": "Database for Growbot",
+  "main": "dist/index.js",
+  "author": "Bryan Kegley <hi@bryankegley.me>",
+  "license": "MIT",
+  "devDependencies": {
+    "@babel/cli": "^7.6.2",
+    "@babel/core": "^7.6.2",
+    "@babel/preset-env": "^7.6.2"
+  }
+}
