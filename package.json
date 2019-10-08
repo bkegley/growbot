@@ -1,0 +1,23 @@
+{
+  "name": "growbot-workspace",
+  "private": true,
+  "license": "MIT",
+  "workspaces": {
+    "packages": [
+      "packages/*"
+    ]
+  },
+  "scripts": {
+    "test": "lerna run test",
+    "lint": "lerna run lint",
+    "lint:fix": "lerna run lint:fix",
+    "prettier": "prettier \"**/*.+(js|jsx|ts|tsx|json|yml|yaml|css|less|scss|md|mdx|graphql)\"",
+    "format": "yarn prettier -- --write"
+  },
+  "devDependencies": {
+    "husky": "^3.0.8",
+    "lerna": "^3.16.5",
+    "lint-staged": "^9.4.1",
+    "prettier": "^1.18.2"
+  }
+}
