@@ -1,24 +1,24 @@
 {
-  "name": "@growbot/growbot",
+  "name": "@growbot/server",
   "version": "0.0.1",
-  "description": "Just a friendly Twitch chatbot named Growbot",
+  "description": "Server for Growbot",
   "main": "dist/index.js",
   "author": "Bryan Kegley <hi@bryankegley.me>",
   "license": "MIT",
   "scripts": {
     "develop": "nodemon --exec babel-node src/index.js",
-    "build": "babel src --out-dir dist"
+    "build": "babel src --out-dir dist",
+    "start": "node dist/index.js"
   },
   "devDependencies": {
     "@babel/cli": "^7.6.2",
     "@babel/core": "^7.6.2",
     "@babel/node": "^7.6.2",
-    "@babel/preset-env": "^7.6.2",
-    "nodemon": "^1.19.3"
+    "@babel/preset-env": "^7.6.2"
   },
   "dependencies": {
-    "cross-fetch": "^3.0.4",
-    "dotenv": "^8.1.0",
-    "tmi.js": "^1.5.0"
+    "@growbot/mongo": "*",
+    "apollo-server": "^2.9.5",
+    "nodemon": "^1.19.3"
   }
 }

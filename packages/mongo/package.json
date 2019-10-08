@@ -5,9 +5,16 @@
   "main": "dist/index.js",
   "author": "Bryan Kegley <hi@bryankegley.me>",
   "license": "MIT",
+  "scripts": {
+    "develop": "babel --watch src --out-dir dist",
+    "build": "babel src --out-dir dist"
+  },
   "devDependencies": {
     "@babel/cli": "^7.6.2",
     "@babel/core": "^7.6.2",
     "@babel/preset-env": "^7.6.2"
+  },
+  "dependencies": {
+    "mongoose": "^5.7.3"
   }
 }
