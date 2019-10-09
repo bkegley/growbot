@@ -104,7 +104,7 @@ async function onCommandHandler(target, context, message, self) {
     }
 
     case '!growbot': {
-      const [command, ...stringArray] = args
+      const [command, ...remaining] = args
 
       // get growbot if exists
       const {username} = context
@@ -113,7 +113,9 @@ async function onCommandHandler(target, context, message, self) {
             query getUser($username: String) {
               getUser(username: $username) {
                 growbot {
+                  id
                   name
+                  type
                 }
               }
             }
@@ -129,7 +131,7 @@ async function onCommandHandler(target, context, message, self) {
 
       if (!command) {
         if (growbot) {
-          client.say(target, `Your growbot is ${growbot.name} :)`)
+          client.say(target, `Your growbot is ${growbot.name} :) It is type ${growbot.type}`)
         } else {
           client.say(target, `You don't have a growbot yet! Create one with '!growbot create Bitty the Botty'`)
         }
@@ -138,7 +140,7 @@ async function onCommandHandler(target, context, message, self) {
 
       switch (command) {
         case 'create': {
-          const name = stringArray.join(' ')
+          const name = remaining.join(' ')
           const {data} = await fetchGraphql('http://localhost:4000/graphql', {
             query: `
             mutation createGrowbot($input: CreateGrowbotInput) {
@@ -163,8 +165,62 @@ async function onCommandHandler(target, context, message, self) {
           client.say(target, `Say hello to your new Growbot! Hello, ${growbot.name}`)
           break
         }
+        case 'set': {
+          const [variable, ...setRemaining] = remaining
+          const value = setRemaining.join(' ')
+
+          switch (variable) {
+            case 'name': {
+              const {data} = await fetchGraphql('http://localhost:4000', {
+                query: `
+                mutation updateGrowbot($id: ID $input: UpdateGrowbotInput) {
+                  updateGrowbot(id: $id input: $input) {
+                    id
+                    name
+                  }
+                }
+                `,
+                variables: {
+                  id: growbot.id,
+                  input: {
+                    name: value,
+                  },
+                },
+              })
+
+              client.say(target, `Your growbot is now named ${data.updateGrowbot.name}`)
+              break
+            }
+            case 'type': {
+              const {data} = await fetchGraphql('http://localhost:4000', {
+                query: `
+                mutation updateGrowbot($id: ID $input: UpdateGrowbotInput) {
+                  updateGrowbot(id: $id input: $input) {
+                    id
+                    name
+                    type
+                  }
+                }
+                `,
+                variables: {
+                  id: growbot.id,
+                  input: {
+                    type: value.toUpperCase(),
+                  },
+                },
+              })
+
+              client.say(target, `Your growbot is now the type ${data.updateGrowbot.type}`)
+              break
+            }
+          }
+        }
         case 'grease': {
         }
+        case 'plugin': {
+          // a user can decide to plugin their growbot which triples their energy replenishment rate
+        }
+
         default: {
         }
       }

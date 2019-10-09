@@ -1,6 +1,7 @@
 import mongoose from 'mongoose'
 
 function createMongoConnection({baseConnection = 'mongodb://localhost:27017/', databaseName = 'test-database'}) {
+  mongoose.set('useFindAndModify', false)
   mongoose
     .connect(`${baseConnection}${databaseName}`, {
       useNewUrlParser: true,

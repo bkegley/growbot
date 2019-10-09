@@ -15,7 +15,8 @@ const GrowbotSchema = new Schema(
     },
     type: {
       type: String,
-      enum: ['earth', 'wind', 'water', 'fire'],
+      enum: ['SOLAR', 'BATTERY', 'GAS', 'HYDRO'],
+      default: 'GAS',
     },
   },
   {timestamps: true},
