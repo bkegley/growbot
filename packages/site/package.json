@@ -1,0 +1,22 @@
+{
+  "name": "@growbot/site",
+  "version": "0.0.1",
+  "description": "Site for Growbot",
+  "main": "index.js",
+  "author": "Bryan Kegley <hi@bryankegley.me>",
+  "license": "MIT",
+  "scripts": {
+    "develop": "gatsby develop",
+    "clean": "gatsby clean",
+    "build": "gatsby build",
+    "serve": "gatsby serve"
+  },
+  "dependencies": {
+    "@apollo/react-hooks": "^3.1.2",
+    "apollo-boost": "^0.4.4",
+    "gatsby": "^2.15.33",
+    "graphql": "^14.5.8",
+    "react": "^16.10.2",
+    "react-dom": "^16.10.2"
+  }
+}
