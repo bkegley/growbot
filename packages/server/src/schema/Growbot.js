@@ -6,6 +6,8 @@ export const typeDefs = gql`
     name: String
     type: TypeEnum
     experience: Int
+    energy: Int
+    maxEnergy: Int
     user: User
   }
 
@@ -36,6 +38,7 @@ export const typeDefs = gql`
     createGrowbot(input: CreateGrowbotInput): Growbot
     updateGrowbot(id: ID, input: UpdateGrowbotInput): Growbot
     deleteGrowbot(id: ID): Growbot
+    replenishChattersGrowbots(usernames: [String], energy: Int): [Growbot]
   }
 `
 
@@ -62,6 +65,39 @@ export const resolvers = {
     deleteGrowbot: async (parent, {id}, {models}) => {
       const growbot = await models.Growbot.findByIdAndDelete(id)
       return growbot
+    },
+    replenishChattersGrowbots: async (parent, {usernames, energy}, {models}) => {
+      const growbotUpdatePromises = usernames.map(username => {
+        return models.Growbot.findOneAndUpdate(
+          {
+            username,
+            $where: function() {
+              return this.energy < this.maxEnergy
+            },
+          },
+          {$inc: {energy: energy}},
+          {new: true},
+        )
+      })
+      const growbots = await Promise.all([...growbotUpdatePromises])
+      const allGrowbots = await Promise.all([
+        ...growbots.map((growbot, index) => {
+          return new Promise(async resolve => {
+            if (growbot) {
+              resolve(growbot)
+            }
+            const dbGrowbot = await models.Growbot.findOne({username: usernames[index]})
+            resolve(dbGrowbot)
+          })
+        }),
+      ])
+      return allGrowbots
+    },
+  },
+  Growbot: {
+    user: async (parent, args, {models}) => {
+      const user = await models.User.findOne({username: parent.username})
+      return user
     },
   },
 }

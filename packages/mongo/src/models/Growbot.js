@@ -13,6 +13,14 @@ const GrowbotSchema = new Schema(
       type: Number,
       default: 0,
     },
+    energy: {
+      type: Number,
+      default: 100,
+    },
+    maxEnergy: {
+      type: Number,
+      default: 100,
+    },
     type: {
       type: String,
       enum: ['SOLAR', 'BATTERY', 'GAS', 'HYDRO'],
