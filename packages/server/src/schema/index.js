@@ -12,6 +12,9 @@ const baseTypes = gql`
   type Mutation {
     _mutation: String
   }
+  type Subscription {
+    _subscription: String
+  }
 `
 
 export const typeDefs = [baseTypes, commandTypeDefs, growbotTypeDefs, userTypeDefs, variableTypeDefs]

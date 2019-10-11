@@ -2,13 +2,29 @@ require('dotenv').config()
 import tmi from 'tmi.js'
 import fetch from 'cross-fetch'
 import fetchGraphql from './fetchGraphql'
+import pollChatters from './pollChatters'
+
+const channels = ['bjkegley']
+
+// const interval = pollChatters(channels, 1000)
+// // clearInterval(interval)
+// process.on('exit', () => {
+//   clearInterval(interval)
+//   console.log('received signal - exit')
+//   process.exit()
+// })
+// process.on('SIGINT', () => {
+//   clearInterval(interval)
+//   console.log('received signal - SIGINT')
+//   process.exit()
+// })
 
 const options = {
   identity: {
     username: 'growbot',
     password: process.env.TWITCH_AUTH_TOKEN,
   },
-  channels: ['bjkegley'],
+  channels: [...channels],
 }
 
 const client = new tmi.client(options)

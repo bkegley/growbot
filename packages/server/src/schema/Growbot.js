@@ -1,4 +1,7 @@
 import {gql} from 'apollo-server'
+import {pubsub} from '../index'
+
+const GROWBOT_ENERGY_REPLENISHED = 'GROWBOT_ENERGY_REPLENISHED'
 
 export const typeDefs = gql`
   type Growbot {
@@ -39,6 +42,10 @@ export const typeDefs = gql`
     updateGrowbot(id: ID, input: UpdateGrowbotInput): Growbot
     deleteGrowbot(id: ID): Growbot
     replenishChattersGrowbots(usernames: [String], energy: Int): [Growbot]
+  }
+
+  extend type Subscription {
+    growbotEnergyReplenished: [Growbot]
   }
 `
 
@@ -91,7 +98,18 @@ export const resolvers = {
           })
         }),
       ])
+      pubsub.publish(GROWBOT_ENERGY_REPLENISHED, {
+        growbotEnergyReplenished: {
+          growbots: allGrowbots,
+        },
+      })
+
       return allGrowbots
+    },
+  },
+  Subscription: {
+    growbotEnergyReplenished: {
+      subscribe: () => pubsub.asyncIterator([GROWBOT_ENERGY_REPLENISHED]),
     },
   },
   Growbot: {

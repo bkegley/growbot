@@ -1,6 +1,8 @@
-import {ApolloServer} from 'apollo-server'
+import {ApolloServer, PubSub} from 'apollo-server'
 import {models, createMongoConnection} from '@growbot/mongo'
 import {typeDefs, resolvers} from './schema'
+
+export const pubsub = new PubSub()
 
 const server = new ApolloServer({
   typeDefs: typeDefs,

@@ -1,6 +1,6 @@
 import React from 'react'
-import {useQuery, useMutation} from '@apollo/react-hooks'
-import {gql} from 'apollo-boost'
+import {useQuery, useMutation, useSubscription} from '@apollo/react-hooks'
+import {gql} from 'graphql-tag'
 
 const LIST_GROW_BOTS_QUERY = gql`
   {
@@ -22,11 +22,29 @@ const UPDATE_GROW_BOT_MUTATION = gql`
   }
 `
 
+const GROWBOT_ENERGY_REPLENISHED = gql`
+  subscription {
+    growbotEnergyReplenished {
+      id
+      name
+      energy
+      maxEnergy
+      user {
+        username
+      }
+    }
+  }
+`
+
 const IndexPage = () => {
   const {loading, error, data} = useQuery(LIST_GROW_BOTS_QUERY)
   const [updateGrowbot, {data: updatedGrowbotData}] = useMutation(UPDATE_GROW_BOT_MUTATION)
-
-  console.log({data, updatedGrowbotData})
+  // const {
+  //   error: subError,
+  //   loading: subLoading,
+  //   data: {growbotEnergyReplenished},
+  // } = useSubscription(GROWBOT_ENERGY_REPLENISHED)
+  // console.log({subError, subLoading, growbotEnergyReplenished})
 
   if (loading) {
     return (
